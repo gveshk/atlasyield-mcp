@@ -4,9 +4,16 @@
   "description": "Read-only MCP server for the AtlasYield judgment layer: vault scores, coverage, route survival, open alerts. No custody, no execution.",
   "license": "MIT",
   "type": "module",
-  "bin": { "atlasyield-mcp": "dist/index.js" },
-  "files": ["dist", "README.md"],
-  "engines": { "node": ">=20" },
+  "bin": {
+    "atlasyield-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc",
     "type-check": "tsc --noEmit",
@@ -16,7 +23,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "zod": "^4.0.0"
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@types/node": "latest",
