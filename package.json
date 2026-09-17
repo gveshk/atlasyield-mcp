@@ -1,6 +1,6 @@
 {
   "name": "@atlasyield/mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Read-only MCP server for the AtlasYield judgment layer: vault scores, coverage, route survival, open alerts. No custody, no execution.",
   "license": "MIT",
   "type": "module",

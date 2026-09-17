@@ -1,6 +1,6 @@
 # @atlasyield/mcp
 
-Read-only MCP server for the AtlasYield judgment layer. Four tools, no key, no custody,
+Read-only MCP server for the AtlasYield judgment layer. Six tools, no key, no custody,
 no execution: an agent asks for judgment and is told when a route is unsafe.
 
 | Tool | Answers |
@@ -9,6 +9,8 @@ no execution: an agent asks for judgment and is told when a route is unsafe.
 | `get_coverage` | What is scored right now: vault count, TVL, score spread, by protocol and chain. |
 | `check_route_survival` | Can a deposit be exited at size, measured today? `blocking:true` means refuse. |
 | `list_open_alerts` | Open blowup-monitor alerts from the published daily snapshot. |
+| `explain_vault_score` | Why: all 16 factors by pillar (sub-score, weight, raw input, label) and the three weakest. |
+| `compare_vaults` | 2-8 vaults side by side, ranked by composite; unscored ones stay visible as `found:false`. |
 
 Data comes from the public API `https://api.atlasyield.club/v1` and the published score
 history `https://github.com/gveshk/atlasyield-score-history`. Scored every 4 hours, snapshot

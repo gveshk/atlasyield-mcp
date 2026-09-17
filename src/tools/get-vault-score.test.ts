@@ -4,7 +4,7 @@ import { getVaultScore } from './get-vault-score.js';
 
 const ROW: ScoreRow = {
   vaultId: 'morpho:8453:0x09832347586e238841f49149c84d121bc2191c53',
-  chainId: 8453, protocolId: 'morpho', asset: 'WETH', assetClass: null,
+  chainId: 8453, protocolId: 'morpho', name: 'Morpho WETH', asset: 'WETH', assetClass: null,
   composite: 69.215, label: 'Balanced',
   pillarScores: { yield: 68.5, safety: 68.3, liquidity: 60, sustainability: 80 },
   apy: 3.1, tvl: 12_000_000, dataQuality: 'sufficient',

@@ -1,5 +1,5 @@
 /**
- * AY-204 — registers the four read-only tools on an McpServer.
+ * AY-204 — registers the read-only tools on an McpServer.
  * No custody, no writes, no execution surface. Execution, if it ever ships,
  * is AY-261/262 as separate /v1/execute endpoints — not tools here.
  */
@@ -9,9 +9,11 @@ import { getVaultScore, getVaultScoreInput, getVaultScoreDescription } from './t
 import { getCoverage, getCoverageInput, getCoverageDescription } from './tools/get-coverage.js';
 import { checkRouteSurvival, checkRouteSurvivalInput, checkRouteSurvivalDescription } from './tools/check-route-survival.js';
 import { listOpenAlerts, listOpenAlertsInput, listOpenAlertsDescription } from './tools/list-open-alerts.js';
+import { explainVaultScore, explainVaultScoreInput, explainVaultScoreDescription } from './tools/explain-vault-score.js';
+import { compareVaults, compareVaultsInput, compareVaultsDescription } from './tools/compare-vaults.js';
 
 export const SERVER_NAME = 'atlasyield';
-export const SERVER_VERSION = '0.1.0';
+export const SERVER_VERSION = '0.2.0';
 
 export function createServer(client: AtlasClient): McpServer {
   const server = new McpServer(
@@ -48,6 +50,17 @@ export function createServer(client: AtlasClient): McpServer {
       ...(args.chainId !== undefined ? { chainId: args.chainId } : {}),
       ...(args.minSeverity !== undefined ? { minSeverity: args.minSeverity } : {}),
     }),
+  );
+
+  server.registerTool(
+    'explain_vault_score',
+    { title: 'Explain vault score', description: explainVaultScoreDescription, inputSchema: explainVaultScoreInput },
+    (args) => explainVaultScore(client, args),
+  );
+  server.registerTool(
+    'compare_vaults',
+    { title: 'Compare vaults', description: compareVaultsDescription, inputSchema: compareVaultsInput },
+    (args) => compareVaults(client, args),
   );
 
   return server;

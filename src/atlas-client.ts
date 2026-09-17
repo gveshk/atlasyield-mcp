@@ -23,6 +23,7 @@ export interface ScoreRow {
   vaultId: string;
   chainId: number;
   protocolId: string;
+  name: string | null;
   asset: string | null;
   assetClass: string | null;
   composite: number;
@@ -45,6 +46,35 @@ export interface ScoresResponse {
   count: number;
   disclaimer?: string;
   data: ScoreRow[];
+}
+
+/** One entry of GET /v1/vaults/:chainId/:address/factors `data.factors`. */
+export interface FactorEntry {
+  score: number;
+  weight: number;
+  rawValue: number;
+  label: string;
+  pillar: 'yield' | 'safety' | 'liquidity' | 'sustainability';
+}
+
+/** GET /v1/vaults/:chainId/:address/factors `data`. */
+export interface FactorsData {
+  vaultId: string;
+  chainId: number;
+  protocolId: string;
+  composite: number;
+  label: string;
+  pillarScores: Record<string, number>;
+  factors: Record<string, FactorEntry>;
+  dataQuality: string;
+  scoredAt: string;
+  scorerVersion: string;
+}
+
+export interface FactorsResponse {
+  success: true;
+  disclaimer?: string;
+  data: FactorsData;
 }
 
 /** GET /v1/vaults/:chainId/:address/route `data`. */
@@ -117,6 +147,12 @@ export class AtlasClient {
     if (filter.protocolId !== undefined) qs.set('protocolId', filter.protocolId);
     const suffix = qs.size > 0 ? `?${qs.toString()}` : '';
     return this.fetchJson<ScoresResponse>(`${this.apiBase}/scores${suffix}`);
+  }
+
+  async getFactors(chainId: number, address: string): Promise<FactorsResponse> {
+    return this.fetchJson<FactorsResponse>(
+      `${this.apiBase}/vaults/${chainId}/${address.toLowerCase()}/factors`,
+    );
   }
 
   async getRoute(chainId: number, address: string): Promise<RouteResponse> {
