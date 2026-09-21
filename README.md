@@ -34,7 +34,7 @@ Claude Desktop / Cursor / any stdio client (`mcp.json` or `claude_desktop_config
 }
 ```
 
-From a checkout: `npm run build -w apps/mcp` then use `"command": "node", "args": ["<repo>/apps/mcp/dist/index.js"]`.
+From a checkout: `npm install && npm run build` then use `"command": "node", "args": ["<repo>/apps/mcp/dist/index.js"]`.
 
 ## Try it
 

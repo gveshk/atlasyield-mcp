@@ -4,9 +4,8 @@
   "title": "AtlasYield",
   "description": "DeFi vault judgment for agents: 16-factor Atlas Score, route survival, blowup alerts. Read-only.",
   "repository": {
-    "url": "https://github.com/gveshk/AtlasYield",
-    "source": "github",
-    "subfolder": "apps/mcp"
+    "url": "https://github.com/gveshk/atlasyield-mcp",
+    "source": "github"
   },
   "websiteUrl": "https://docs.atlasyield.club/api-reference/mcp",
   "version": "0.2.1",

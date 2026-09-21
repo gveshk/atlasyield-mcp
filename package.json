@@ -17,8 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gveshk/AtlasYield.git",
-    "directory": "apps/mcp"
+    "url": "git+https://github.com/gveshk/atlasyield-mcp.git",
   },
   "homepage": "https://docs.atlasyield.club/api-reference/mcp",
   "keywords": [
