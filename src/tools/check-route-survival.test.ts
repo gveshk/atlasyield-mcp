@@ -26,6 +26,18 @@ describe('check_route_survival', () => {
     expect(String(s['answer'])).toMatch(/do not deposit/i);
   });
 
+  it('tells the agent WHY: protocol_refused reads as dead, no_aggregator_quote as no priced route, both same-chain', async () => {
+    const dead = await checkRouteSurvival(clientWith({ ...BASE, verdict: 'NO_ROUTE', usdOut: null, retained: null, reasonClass: 'protocol_refused' }), { chainId: 1, address: '0xabc' });
+    expect(dead.structuredContent?.['reasonClass']).toBe('protocol_refused');
+    expect(String(dead.structuredContent?.['answer'])).toMatch(/own router refuses/i);
+    expect(String(dead.structuredContent?.['answer'])).toMatch(/same-chain/i);
+
+    const lp = await checkRouteSurvival(clientWith({ ...BASE, verdict: 'NO_ROUTE', usdOut: null, retained: null, reasonClass: 'no_aggregator_quote' }), { chainId: 1, address: '0xabc' });
+    expect(lp.structuredContent?.['blocking']).toBe(true);
+    expect(String(lp.structuredContent?.['answer'])).toMatch(/no same-chain aggregator/i);
+    expect(lp.structuredContent?.['probeScope']).toBe('same-chain');
+  });
+
   it('DANGEROUS and UNPRICEABLE are also blocking', async () => {
     for (const verdict of ['DANGEROUS', 'UNPRICEABLE'] as const) {
       const res = await checkRouteSurvival(clientWith({ ...BASE, verdict }), { chainId: 1, address: '0xabc' });

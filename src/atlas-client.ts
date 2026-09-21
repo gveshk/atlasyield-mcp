@@ -84,11 +84,13 @@ export interface RouteData {
   address?: string;
   screened: boolean;
   verdict: 'OK' | 'DEGRADED' | 'DANGEROUS' | 'UNPRICEABLE' | 'NO_ROUTE' | 'SKIPPED' | null;
+  reasonClass?: 'protocol_refused' | 'no_aggregator_quote' | 'dust' | 'no_amount' | 'rate_limited' | 'unmapped' | null;
   usdIn: number | null;
   usdOut: number | null;
   retained: number | null;
   path: string | null;
   checkedAt: string | null;
+  probe?: { scope: string; crossChain: string; notionalsUsd: number[] };
 }
 
 export interface RouteResponse {
