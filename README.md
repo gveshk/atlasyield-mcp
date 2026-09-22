@@ -38,6 +38,8 @@ Claude Desktop / Cursor / any stdio client (`mcp.json` or `claude_desktop_config
 
 From a checkout: `npm install && npm run build` then use `"command": "node", "args": ["<checkout>/dist/index.js"]`.
 
+Docker: `docker build -t atlasyield-mcp .` then `"command": "docker", "args": ["run", "-i", "--rm", "atlasyield-mcp"]`.
+
 ## Try it
 
 > Is Morpho WETH on Base (0x09832347586e238841f49149c84d121bc2191c53) safe to enter at $10k?
