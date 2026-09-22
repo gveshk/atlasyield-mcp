@@ -71,6 +71,20 @@ describe('AtlasClient', () => {
     await expect(client.getRoute(8453, '0x1')).rejects.toThrow(/exceed_egress_quota/);
   });
 
+  it('surfaces Retry-After on a 429 so an agent knows how long to back off', async () => {
+    const client = new AtlasClient({
+      fetch: (async () =>
+        new Response(JSON.stringify({ success: false, error: 'Too many requests' }), {
+          status: 429,
+          headers: { 'content-type': 'application/json', 'retry-after': '7' },
+        })) as FetchLike,
+    });
+    const err = await client.getScores({}).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(AtlasApiError);
+    expect((err as AtlasApiError).retryAfterSeconds).toBe(7);
+    expect((err as AtlasApiError).message).toMatch(/retry after 7s/);
+  });
+
   it('throws AtlasApiError with the HTTP status when the body is not JSON', async () => {
     const client = new AtlasClient({
       fetch: (async () => new Response('<html>502</html>', { status: 502 })) as FetchLike,

@@ -12,8 +12,14 @@ export const DEFAULT_SNAPSHOT_BASE =
   'https://raw.githubusercontent.com/gveshk/atlasyield-score-history/main';
 
 export class AtlasApiError extends Error {
-  constructor(message: string, readonly url: string, readonly status: number) {
-    super(message);
+  constructor(
+    message: string,
+    readonly url: string,
+    readonly status: number,
+    /** From the Retry-After header on a 429/503, so callers can back off instead of retrying blind. */
+    readonly retryAfterSeconds?: number,
+  ) {
+    super(retryAfterSeconds === undefined ? message : `${message} (retry after ${retryAfterSeconds}s)`);
     this.name = 'AtlasApiError';
   }
 }
@@ -171,11 +177,16 @@ export class AtlasClient {
     const res = await this.fetchImpl(url, {
       headers: { accept: 'application/json', 'user-agent': 'atlasyield-mcp' },
     });
+    const retryAfter = res.headers.get('retry-after');
+    const retryAfterSeconds =
+      retryAfter !== null && /^\d+$/.test(retryAfter) ? Number(retryAfter) : undefined;
     let body: unknown;
     try {
       body = await res.json();
     } catch {
-      throw new AtlasApiError(`HTTP ${res.status} from ${url} (non-JSON body)`, url, res.status);
+      throw new AtlasApiError(
+        `HTTP ${res.status} from ${url} (non-JSON body)`, url, res.status, retryAfterSeconds,
+      );
     }
     if (
       typeof body === 'object' && body !== null &&
@@ -186,10 +197,11 @@ export class AtlasClient {
         `Atlas API error (HTTP ${res.status}): ${typeof err === 'string' ? err : JSON.stringify(err)}`,
         url,
         res.status,
+        retryAfterSeconds,
       );
     }
     if (!res.ok) {
-      throw new AtlasApiError(`HTTP ${res.status} from ${url}`, url, res.status);
+      throw new AtlasApiError(`HTTP ${res.status} from ${url}`, url, res.status, retryAfterSeconds);
     }
     return body as T;
   }
