@@ -17,8 +17,10 @@ export async function getVaultScore(
   args: { chainId: number; address: string },
 ): Promise<ToolResult> {
   try {
-    const res = await client.getScores({ chainId: args.chainId });
     const want = args.address.toLowerCase();
+    // address= asks the API for the one row. The client-side match below stays, so this still
+    // works against an API that predates the param (it ignores it and returns the whole chain).
+    const res = await client.getScores({ chainId: args.chainId, address: want });
     const vault = res.data.find((r) => addressOf(r.vaultId) === want) ?? null;
     return ok({
       found: vault !== null,

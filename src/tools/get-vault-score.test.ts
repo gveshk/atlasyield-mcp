@@ -31,6 +31,8 @@ describe('get_vault_score', () => {
     });
     expect(res.isError).toBeUndefined();
     expect(seen[0]).toContain('/scores?chainId=8453');
+    // Asks the API for the one row instead of downloading the whole chain.
+    expect(new URL(seen[0]!).searchParams.get('address')).toBe('0x09832347586e238841f49149c84d121bc2191c53');
     expect(res.structuredContent?.['found']).toBe(true);
     expect(res.structuredContent?.['vault']).toMatchObject({ vaultId: ROW.vaultId, composite: 69.215 });
   });

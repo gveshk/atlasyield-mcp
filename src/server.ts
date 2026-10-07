@@ -5,6 +5,7 @@
  */
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { AtlasClient } from './atlas-client.js';
+import { findVaults, findVaultsInput, findVaultsDescription } from './tools/find-vaults.js';
 import { getVaultScore, getVaultScoreInput, getVaultScoreDescription } from './tools/get-vault-score.js';
 import { getCoverage, getCoverageInput, getCoverageDescription } from './tools/get-coverage.js';
 import { checkRouteSurvival, checkRouteSurvivalInput, checkRouteSurvivalDescription } from './tools/check-route-survival.js';
@@ -25,6 +26,11 @@ export function createServer(client: AtlasClient): McpServer {
     },
   );
 
+  server.registerTool(
+    'find_vaults',
+    { title: 'Find vaults', description: findVaultsDescription, inputSchema: findVaultsInput },
+    (args) => findVaults(client, args),
+  );
   server.registerTool(
     'get_vault_score',
     { title: 'Get vault score', description: getVaultScoreDescription, inputSchema: getVaultScoreInput },

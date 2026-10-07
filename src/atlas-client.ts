@@ -49,9 +49,48 @@ export interface ScoreRow {
 export interface ScoresResponse {
   success: true;
   scorerVersion: string;
+  /** Rows returned. */
   count: number;
+  /** Rows matching the filters before `limit`. Absent on an API that predates the find params. */
+  total?: number;
   disclaimer?: string;
   data: ScoreRow[];
+}
+
+/** One row of GET /v1/scores?fields=compact. About 250 bytes against ~820 for a ScoreRow. */
+export interface CompactScoreRow {
+  vaultId: string;
+  chainId: number;
+  protocolId: string;
+  name: string | null;
+  asset: string | null;
+  composite: number;
+  label: string;
+  apy: number | null;
+  tvl: number | null;
+  dataQuality: string;
+  /** In the live catalog and not flagged unroutable. Missing from the catalog counts as false. */
+  routable: boolean;
+  scoredAt: string;
+  pageUrl: string;
+}
+
+export interface CompactScoresResponse extends Omit<ScoresResponse, 'data'> {
+  data: CompactScoreRow[];
+}
+
+/** Query params of GET /v1/scores. All optional; see the public-api route. */
+export interface ScoresFilter {
+  chainId?: number;
+  protocolId?: string;
+  address?: string;
+  asset?: string;
+  minScore?: number;
+  minTvl?: number;
+  routable?: true;
+  excludeFallback?: true;
+  sort?: 'composite' | 'apy' | 'tvl';
+  limit?: number;
 }
 
 /** One entry of GET /v1/vaults/:chainId/:address/factors `data.factors`. */
@@ -138,6 +177,22 @@ export interface AtlasClientOptions {
   fetch?: typeof fetch;
 }
 
+function scoresQuery(filter: ScoresFilter, compact: boolean): string {
+  const qs = new URLSearchParams();
+  if (filter.chainId !== undefined) qs.set('chainId', String(filter.chainId));
+  if (filter.protocolId !== undefined) qs.set('protocolId', filter.protocolId);
+  if (filter.address !== undefined) qs.set('address', filter.address.toLowerCase());
+  if (filter.asset !== undefined) qs.set('asset', filter.asset);
+  if (filter.minScore !== undefined) qs.set('minScore', String(filter.minScore));
+  if (filter.minTvl !== undefined) qs.set('minTvl', String(filter.minTvl));
+  if (filter.routable) qs.set('routable', 'true');
+  if (filter.excludeFallback) qs.set('excludeFallback', 'true');
+  if (filter.sort !== undefined) qs.set('sort', filter.sort);
+  if (filter.limit !== undefined) qs.set('limit', String(filter.limit));
+  if (compact) qs.set('fields', 'compact');
+  return qs.size > 0 ? `?${qs.toString()}` : '';
+}
+
 export class AtlasClient {
   private readonly apiBase: string;
   private readonly snapshotBase: string;
@@ -149,12 +204,13 @@ export class AtlasClient {
     this.fetchImpl = opts.fetch ?? fetch;
   }
 
-  async getScores(filter: { chainId?: number; protocolId?: string }): Promise<ScoresResponse> {
-    const qs = new URLSearchParams();
-    if (filter.chainId !== undefined) qs.set('chainId', String(filter.chainId));
-    if (filter.protocolId !== undefined) qs.set('protocolId', filter.protocolId);
-    const suffix = qs.size > 0 ? `?${qs.toString()}` : '';
-    return this.fetchJson<ScoresResponse>(`${this.apiBase}/scores${suffix}`);
+  async getScores(filter: ScoresFilter = {}): Promise<ScoresResponse> {
+    return this.fetchJson<ScoresResponse>(`${this.apiBase}/scores${scoresQuery(filter, false)}`);
+  }
+
+  /** Same endpoint with fields=compact: small rows meant for an agent's context window. */
+  async findVaults(filter: ScoresFilter): Promise<CompactScoresResponse> {
+    return this.fetchJson<CompactScoresResponse>(`${this.apiBase}/scores${scoresQuery(filter, true)}`);
   }
 
   async getFactors(chainId: number, address: string): Promise<FactorsResponse> {
