@@ -6,8 +6,8 @@
  * Logs go to stderr only; stdout is the MCP transport.
  */
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { AtlasClient } from './atlas-client.js';
-import { createServer, SERVER_NAME, SERVER_VERSION } from './server.js';
+import { AtlasClient } from './atlas-client.ts';
+import { createServer, SERVER_NAME, SERVER_VERSION } from './server.ts';
 
 async function main(): Promise<void> {
   const client = new AtlasClient({

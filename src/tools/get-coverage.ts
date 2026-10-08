@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { AtlasClient } from '../atlas-client.js';
-import { ok, failFrom, type ToolResult } from '../result.js';
+import type { AtlasClient } from '../atlas-client.ts';
+import { ok, failFrom, type ToolResult } from '../result.ts';
 
 export const getCoverageInput = {
   chainId: z.number().int().positive().optional().describe('Restrict to one chain id'),

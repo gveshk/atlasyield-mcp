@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { AtlasClient } from '../atlas-client.js';
-import { ok, fail, failFrom, type ToolResult } from '../result.js';
+import type { AtlasClient } from '../atlas-client.ts';
+import { ok, fail, failFrom, type ToolResult } from '../result.ts';
 
 /** Names an agent or a user will actually say. The API itself stays numeric. */
 const CHAIN_IDS: Record<string, number> = {

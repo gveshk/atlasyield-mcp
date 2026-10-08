@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { AtlasApiError, type AtlasClient } from '../atlas-client.js';
-import { ok, failFrom, type ToolResult } from '../result.js';
+import { AtlasApiError, type AtlasClient } from '../atlas-client.ts';
+import { ok, failFrom, type ToolResult } from '../result.ts';
 
 export const explainVaultScoreInput = {
   chainId: z.number().int().positive().describe('EVM chain id, e.g. 1 (Ethereum), 8453 (Base), 42161 (Arbitrum)'),

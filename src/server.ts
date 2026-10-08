@@ -4,14 +4,14 @@
  * is AY-261/262 as separate /v1/execute endpoints — not tools here.
  */
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AtlasClient } from './atlas-client.js';
-import { findVaults, findVaultsInput, findVaultsDescription } from './tools/find-vaults.js';
-import { getVaultScore, getVaultScoreInput, getVaultScoreDescription } from './tools/get-vault-score.js';
-import { getCoverage, getCoverageInput, getCoverageDescription } from './tools/get-coverage.js';
-import { checkRouteSurvival, checkRouteSurvivalInput, checkRouteSurvivalDescription } from './tools/check-route-survival.js';
-import { listOpenAlerts, listOpenAlertsInput, listOpenAlertsDescription } from './tools/list-open-alerts.js';
-import { explainVaultScore, explainVaultScoreInput, explainVaultScoreDescription } from './tools/explain-vault-score.js';
-import { compareVaults, compareVaultsInput, compareVaultsDescription } from './tools/compare-vaults.js';
+import type { AtlasClient } from './atlas-client.ts';
+import { findVaults, findVaultsInput, findVaultsDescription } from './tools/find-vaults.ts';
+import { getVaultScore, getVaultScoreInput, getVaultScoreDescription } from './tools/get-vault-score.ts';
+import { getCoverage, getCoverageInput, getCoverageDescription } from './tools/get-coverage.ts';
+import { checkRouteSurvival, checkRouteSurvivalInput, checkRouteSurvivalDescription } from './tools/check-route-survival.ts';
+import { listOpenAlerts, listOpenAlertsInput, listOpenAlertsDescription } from './tools/list-open-alerts.ts';
+import { explainVaultScore, explainVaultScoreInput, explainVaultScoreDescription } from './tools/explain-vault-score.ts';
+import { compareVaults, compareVaultsInput, compareVaultsDescription } from './tools/compare-vaults.ts';
 
 export const SERVER_NAME = 'atlasyield';
 export const SERVER_VERSION = '0.3.0';

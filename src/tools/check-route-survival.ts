@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { AtlasClient, RouteData } from '../atlas-client.js';
-import { ok, failFrom, type ToolResult } from '../result.js';
+import type { AtlasClient, RouteData } from '../atlas-client.ts';
+import { ok, failFrom, type ToolResult } from '../result.ts';
 
 export const checkRouteSurvivalInput = {
   chainId: z.number().int().positive().describe('EVM chain id of the vault'),

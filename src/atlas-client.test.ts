@@ -31,6 +31,19 @@ describe('AtlasClient', () => {
     ]);
   });
 
+  it('sends x-api-key only when an apiKey is configured', async () => {
+    const seenHeaders: Array<Record<string, string>> = [];
+    const spy = (async (_input: RequestInfo | URL, init?: RequestInit) => {
+      seenHeaders.push({ ...(init?.headers as Record<string, string>) });
+      return new Response(JSON.stringify({ success: true, scorerVersion: '2.3.0', count: 0, data: [] }), { status: 200 });
+    }) as FetchLike;
+    await new AtlasClient({ fetch: spy, apiKey: 'k-123' }).getScores({});
+    await new AtlasClient({ fetch: spy }).getScores({});
+    expect(seenHeaders[0]!['x-api-key']).toBe('k-123');
+    expect(seenHeaders[1]!['x-api-key']).toBeUndefined();
+    expect(seenHeaders[0]!['user-agent']).toBe('atlasyield-mcp');
+  });
+
   it('getRoute hits /vaults/:chainId/:address/route with the address lowercased', async () => {
     const seen: string[] = [];
     const client = new AtlasClient({

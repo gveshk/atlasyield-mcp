@@ -175,6 +175,8 @@ export interface AtlasClientOptions {
   apiBase?: string;
   snapshotBase?: string;
   fetch?: typeof fetch;
+  /** Partner key sent as x-api-key. Only the hosted /mcp route sets it (see the hosted-mcp spec); the npm server stays keyless. */
+  apiKey?: string | undefined;
 }
 
 function scoresQuery(filter: ScoresFilter, compact: boolean): string {
@@ -197,11 +199,13 @@ export class AtlasClient {
   private readonly apiBase: string;
   private readonly snapshotBase: string;
   private readonly fetchImpl: typeof fetch;
+  private readonly apiKey: string | undefined;
 
   constructor(opts: AtlasClientOptions = {}) {
     this.apiBase = (opts.apiBase ?? DEFAULT_API_BASE).replace(/\/$/, '');
     this.snapshotBase = (opts.snapshotBase ?? DEFAULT_SNAPSHOT_BASE).replace(/\/$/, '');
     this.fetchImpl = opts.fetch ?? fetch;
+    this.apiKey = opts.apiKey || undefined;
   }
 
   async getScores(filter: ScoresFilter = {}): Promise<ScoresResponse> {
@@ -231,7 +235,11 @@ export class AtlasClient {
 
   private async fetchJson<T>(url: string): Promise<T> {
     const res = await this.fetchImpl(url, {
-      headers: { accept: 'application/json', 'user-agent': 'atlasyield-mcp' },
+      headers: {
+        accept: 'application/json',
+        'user-agent': 'atlasyield-mcp',
+        ...(this.apiKey !== undefined ? { 'x-api-key': this.apiKey } : {}),
+      },
     });
     const retryAfter = res.headers.get('retry-after');
     const retryAfterSeconds =

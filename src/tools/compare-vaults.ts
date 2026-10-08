@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { AtlasClient, ScoreRow } from '../atlas-client.js';
-import { ok, failFrom, addressOf, type ToolResult } from '../result.js';
+import type { AtlasClient, ScoreRow } from '../atlas-client.ts';
+import { ok, failFrom, addressOf, type ToolResult } from '../result.ts';
 
 const VaultRef = z.object({
   chainId: z.number().int().positive().describe('EVM chain id'),
