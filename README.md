@@ -2,11 +2,12 @@
 
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/gveshk/atlasyield-mcp)
 
-Read-only MCP server for the AtlasYield judgment layer. Six tools, no key, no custody,
+Read-only MCP server for the AtlasYield judgment layer. Seven tools, no key, no custody,
 no execution: an agent asks for judgment and is told when a route is unsafe.
 
 | Tool | Answers |
 |---|---|
+| `find_vaults` | No vault address yet? A short ranked list for an asset and chain (`chain: "base"`), routable vaults only, about 2 KB. A ranking, not a recommendation. |
 | `get_vault_score` | Latest 16-factor Atlas Score for one vault (composite, label, 4 pillars, live APY/TVL). |
 | `get_coverage` | What is scored right now: vault count, TVL, score spread, by protocol and chain. |
 | `check_route_survival` | Can a deposit be exited at size, measured today? `blocking:true` means refuse. |

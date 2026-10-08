@@ -14,7 +14,7 @@ import { explainVaultScore, explainVaultScoreInput, explainVaultScoreDescription
 import { compareVaults, compareVaultsInput, compareVaultsDescription } from './tools/compare-vaults.js';
 
 export const SERVER_NAME = 'atlasyield';
-export const SERVER_VERSION = '0.2.0';
+export const SERVER_VERSION = '0.3.0';
 
 export function createServer(client: AtlasClient): McpServer {
   const server = new McpServer(
