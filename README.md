@@ -1,6 +1,7 @@
 # @atlasyield/mcp
 
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/gveshk/atlasyield-mcp)
+[![Wellknown](https://wellknown.network/agents/atlasyield/badge.svg)](https://wellknown.network/agents/atlasyield)
 
 Read-only MCP server for the AtlasYield judgment layer. Seven tools, no key, no custody,
 no execution: an agent asks for judgment and is told when a route is unsafe.
