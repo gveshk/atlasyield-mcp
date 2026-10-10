@@ -14,12 +14,20 @@ export const checkRouteSurvivalDescription =
   "UNPRICEABLE). reasonClass says why: protocol_refused (the protocol's own router refuses, " +
   'the vault is dead) vs no_aggregator_quote (no same-chain swap into the underlying, common ' +
   'for LP vaults; redeeming by hand may still work). The probe is SAME-CHAIN only: USDC on the ' +
-  "vault's own chain. It says nothing about bridging in from elsewhere. A vault that was never " +
-  'screened returns screened:false with no verdict — never a fabricated one. Call this BEFORE ' +
-  'moving money. Read-only.';
+  "vault's own chain. It says nothing about bridging in from elsewhere. Route tracking covers " +
+  'EVM chains only: a Solana vault returns tracked:false (not tracked, neither a pass nor a ' +
+  'failure). A vault that was never screened returns screened:false with no verdict — never a ' +
+  'fabricated one. Call this BEFORE moving money. Read-only.';
 
 function judge(d: RouteData): { blocking: boolean; safeToEnter: boolean | null; answer: string } {
   const where = `${d.vaultId ?? d.address ?? 'vault'} on chain ${d.chainId}`;
+  if (d.tracked === false) {
+    return {
+      blocking: false, safeToEnter: null,
+      answer: `${where} is on a chain where AtlasYield does not track routes (EVM chains only, so Solana is not tracked). ` +
+        'There is no verdict: not tracked is neither a pass nor a failure. Treat as unjudged, not as safe.',
+    };
+  }
   if (!d.screened || d.verdict === null) {
     return {
       blocking: false, safeToEnter: null,
@@ -60,8 +68,10 @@ export async function checkRouteSurvival(
     const { blocking, safeToEnter, answer } = judge(d);
     return ok({
       chainId: d.chainId,
-      address: args.address.toLowerCase(),
+      // Only EVM hex is case-insensitive; a Solana base58 address must be echoed as given.
+      address: args.address.startsWith('0x') ? args.address.toLowerCase() : args.address,
       vaultId: d.vaultId ?? null,
+      tracked: d.tracked !== false,
       screened: d.screened,
       verdict: d.verdict,
       blocking,

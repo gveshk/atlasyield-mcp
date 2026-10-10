@@ -127,6 +127,9 @@ export interface RouteData {
   vaultId?: string;
   chainId: number;
   address?: string;
+  /** False when the chain has no route probe (EVM only; Solana is not tracked). Absent on older API builds. */
+  tracked?: boolean;
+  note?: string;
   screened: boolean;
   verdict: 'OK' | 'DEGRADED' | 'DANGEROUS' | 'UNPRICEABLE' | 'NO_ROUTE' | 'SKIPPED' | null;
   reasonClass?: 'protocol_refused' | 'no_aggregator_quote' | 'dust' | 'no_amount' | 'rate_limited' | 'unmapped' | null;

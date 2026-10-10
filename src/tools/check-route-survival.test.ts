@@ -76,6 +76,35 @@ describe('check_route_survival', () => {
     expect(String(res.structuredContent?.['answer'])).toMatch(/not been screened/i);
   });
 
+  it('a Solana vault is NOT TRACKED: no verdict, not blocking, not safe, and the answer says so', async () => {
+    const res = await checkRouteSurvival(
+      clientWith({
+        chainId: 792703809, address: 'HoffqVZ', tracked: false, note: 'Route tracking covers EVM chains only.',
+        screened: false, verdict: null, usdIn: null, usdOut: null, retained: null, path: null, checkedAt: null,
+      }),
+      { chainId: 792703809, address: 'HoffqVZ' },
+    );
+    const s = res.structuredContent!;
+    expect(s['tracked']).toBe(false);
+    expect(s['verdict']).toBeNull();
+    expect(s['blocking']).toBe(false);
+    expect(s['safeToEnter']).toBeNull();
+    expect(String(s['answer'])).toMatch(/does not track routes/i);
+    expect(String(s['answer'])).toMatch(/not as safe/i);
+    // base58 is case-sensitive: the address must come back exactly as sent
+    expect(s['address']).toBe('HoffqVZ');
+  });
+
+  it('still lowercases an EVM hex address', async () => {
+    const res = await checkRouteSurvival(clientWith(BASE), { chainId: 1, address: '0xABCdef' });
+    expect(res.structuredContent?.['address']).toBe('0xabcdef');
+  });
+
+  it('an older API without the tracked field still reads as tracked', async () => {
+    const res = await checkRouteSurvival(clientWith(BASE), { chainId: 1, address: '0xabc' });
+    expect(res.structuredContent?.['tracked']).toBe(true);
+  });
+
   it('upstream outage is isError, never a fabricated verdict', async () => {
     const client = new AtlasClient({
       fetch: (async () => new Response(JSON.stringify({ success: false, error: 'exceed_egress_quota' }), { status: 500 })) as typeof fetch,
