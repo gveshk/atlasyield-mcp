@@ -14,7 +14,7 @@ import { explainVaultScore, explainVaultScoreInput, explainVaultScoreDescription
 import { compareVaults, compareVaultsInput, compareVaultsDescription } from './tools/compare-vaults.ts';
 
 export const SERVER_NAME = 'atlasyield';
-export const SERVER_VERSION = '0.3.0';
+export const SERVER_VERSION = '0.4.0';
 
 /**
  * Every tool here only reads. Clients use these hints to skip confirmation prompts (ChatGPT confirms
