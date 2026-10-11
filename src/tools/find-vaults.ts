@@ -61,7 +61,7 @@ const FLAG_LEGEND: Record<string, string> = {
 const PRESENTATION = [
   'Tell the user how many vaults matched out of how many candidates, and what the filters removed (see summary).',
   'Show each vault\'s flags beside its APY. A flag is a caution, not a verdict; no flag does not mean safe.',
-  'If notableExcluded is not empty, say which high-ranked vaults were dropped and why.',
+  'If notableExcluded is not empty, say which vaults were dropped and why. Name any dropped for no deposit route or low-confidence data, even if their APY is low: those are the ones a reader most needs to know about.',
   'If truncated is true, say that more vaults matched than are shown.',
   'Do not call any APY sustainable or expected: it is a live reading and moves with deposit size.',
   'The order is a ranking by the Atlas score or the chosen metric, not a recommendation. Run check_route_survival before any deposit.',
