@@ -20,7 +20,18 @@ Data comes from the public API `https://api.atlasyield.club/v1` and the publishe
 history `https://github.com/gveshk/atlasyield-score-history`. Scored every 4 hours, snapshot
 published daily. Research and information, not investment advice.
 
-## Install
+## Hosted: nothing to install
+
+```
+https://atlasyield.club/mcp
+```
+
+Streamable HTTP, read-only, no key and no sign-in. Claude Code:
+`claude mcp add --transport http atlasyield https://atlasyield.club/mcp`. For Claude on the web and
+desktop, ChatGPT, Gemini CLI, Cursor and VS Code, see
+https://docs.atlasyield.club/api-reference/mcp.
+
+## Install (local, over stdio)
 
 Claude Code:
 
