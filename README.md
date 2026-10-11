@@ -8,7 +8,7 @@ no execution: an agent asks for judgment and is told when a route is unsafe.
 
 | Tool | Answers |
 |---|---|
-| `find_vaults` | No vault address yet? A short ranked list for an asset and chain (`chain: "base"`), routable vaults only, about 2 KB. A ranking, not a recommendation. |
+| `find_vaults` | No vault address yet? A short ranked list for an asset (or a list of assets) and chain (`chain: "base"`), with an APY floor (`minApy`), routable vaults only. Also says what the filters removed, the best dropped vaults and why, near-miss asset symbols, risk flags per vault, and a link to a shareable page. A ranking, not a recommendation. |
 | `get_vault_score` | Latest 16-factor Atlas Score for one vault (composite, label, 4 pillars, live APY/TVL). |
 | `get_coverage` | What is scored right now: vault count, TVL, score spread, by protocol and chain. |
 | `check_route_survival` | Can a deposit be exited at size, measured today? `blocking:true` means refuse. |

@@ -71,11 +71,33 @@ export interface CompactScoreRow {
   dataQuality: string;
   /** In the live catalog and not flagged unroutable. Missing from the catalog counts as false. */
   routable: boolean;
+  /** Cautions, not verdicts: thin_tvl, apy_outlier, fallback_data, partial_data, stale_score. Absent on an API that predates them. */
+  flags?: string[];
   scoredAt: string;
   pageUrl: string;
 }
 
+export type FindReason = 'belowMinScore' | 'belowMinTvl' | 'belowMinApy' | 'noDepositRoute' | 'noLiveEntry' | 'fallbackData';
+
+/** `explain` block of GET /v1/scores?explain=true. */
+export interface ExplainBlock {
+  universe: number;
+  candidates: number;
+  matched: number;
+  returned: number;
+  truncated: boolean;
+  failed: Record<FindReason, number>;
+  liveCatalogEntries: number;
+  notable: Array<{
+    vaultId: string; name: string | null; composite: number; apy: number | null; tvl: number | null; reasons: FindReason[];
+  }>;
+  similarAssets: Array<{ asset: string; count: number }>;
+}
+
 export interface CompactScoresResponse extends Omit<ScoresResponse, 'data'> {
+  /** Filters the server honoured. Absent on an API that predates it: do not trust unconfirmed filters. */
+  applied?: { asset?: string[]; minApy?: number; [k: string]: unknown };
+  explain?: ExplainBlock;
   data: CompactScoreRow[];
 }
 
@@ -87,8 +109,10 @@ export interface ScoresFilter {
   asset?: string;
   minScore?: number;
   minTvl?: number;
+  minApy?: number;
   routable?: true;
   excludeFallback?: true;
+  explain?: true;
   sort?: 'composite' | 'apy' | 'tvl';
   limit?: number;
 }
@@ -190,8 +214,10 @@ function scoresQuery(filter: ScoresFilter, compact: boolean): string {
   if (filter.asset !== undefined) qs.set('asset', filter.asset);
   if (filter.minScore !== undefined) qs.set('minScore', String(filter.minScore));
   if (filter.minTvl !== undefined) qs.set('minTvl', String(filter.minTvl));
+  if (filter.minApy !== undefined) qs.set('minApy', String(filter.minApy));
   if (filter.routable) qs.set('routable', 'true');
   if (filter.excludeFallback) qs.set('excludeFallback', 'true');
+  if (filter.explain) qs.set('explain', 'true');
   if (filter.sort !== undefined) qs.set('sort', filter.sort);
   if (filter.limit !== undefined) qs.set('limit', String(filter.limit));
   if (compact) qs.set('fields', 'compact');
