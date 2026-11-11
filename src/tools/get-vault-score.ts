@@ -10,7 +10,9 @@ export const getVaultScoreInput = {
 export const getVaultScoreDescription =
   'Latest Atlas Score for one vault: composite (0-100), label, the four pillar scores ' +
   '(yield, safety, liquidity, sustainability), live APY/TVL, data quality and the scoring ' +
-  'timestamp. Returns found:false when the vault is not in the scored universe. Read-only.';
+  'timestamp. Each vault also carries holdingsScore: the score from what it holds, with its cap; ' +
+  'published:false means it is not yet the headline composite. ' +
+  'Returns found:false when the vault is not in the scored universe. Read-only.';
 
 export async function getVaultScore(
   client: AtlasClient,
