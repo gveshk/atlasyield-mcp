@@ -226,7 +226,10 @@ describe('find_vaults', () => {
     it('defines every flag it can emit, so a model never has to guess one', async () => {
       const out = (await findVaults(clientWith([ROW], { explain: EXPLAIN }), { asset: 'USDC' })).structuredContent!;
       expect(Object.keys(out['flagLegend'] as object).sort()).toEqual(
-        ['apy_outlier', 'fallback_data', 'partial_data', 'stale_score', 'thin_tvl'],
+        ['apy_outlier', 'fallback_data', 'no_yield', 'partial_data', 'stale_score', 'thin_tvl'],
+      );
+      expect((out['flagLegend'] as Record<string, string>)['no_yield']).toBe(
+        '7-day median APY is 0.1% or less, so this is not a yield product (usually a collateral reserve). The score rates holding it safely; no Atlas portfolio includes it.',
       );
     });
 

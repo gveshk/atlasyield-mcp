@@ -38,6 +38,8 @@ export interface ScoreRow {
   apy: number | null;
   tvl: number | null;
   dataQuality: string;
+  /** Not a yield product (APY 0.1% or less): scored for holding it, in no portfolio. Absent on older APIs. */
+  notYieldProduct?: boolean;
   scoredAt: string;
   scorerVersion: string;
   yieldQuality: string | null;
@@ -71,7 +73,7 @@ export interface CompactScoreRow {
   dataQuality: string;
   /** In the live catalog and not flagged unroutable. Missing from the catalog counts as false. */
   routable: boolean;
-  /** Cautions, not verdicts: thin_tvl, apy_outlier, fallback_data, partial_data, stale_score. Absent on an API that predates them. */
+  /** Cautions, not verdicts: thin_tvl, apy_outlier, fallback_data, partial_data, stale_score, no_yield. Absent on an API that predates them. */
   flags?: string[];
   scoredAt: string;
   pageUrl: string;

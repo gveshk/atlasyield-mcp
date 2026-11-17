@@ -43,7 +43,7 @@ export const findVaultsInput = {
 export const findVaultsDescription =
   'Start here when you do not already have a vault address. Answers "which vaults for this asset on this chain?": ' +
   'returns a short ranked list (default 5, max 10) of scored vaults with composite, label, live APY/TVL, ' +
-  'risk flags (thin_tvl, apy_outlier, ...), whether a deposit can reach it (routable), and a citable page URL. ' +
+  'risk flags (thin_tvl, apy_outlier, no_yield, ...), whether a deposit can reach it (routable), and a citable page URL. ' +
   'It also returns what the filters REMOVED: counts per filter, the best-ranked dropped vaults with reasons, ' +
   'near-miss asset symbols, and whether more matched than were returned. Vaults with no deposit route and rows ' +
   'scored on fallback data are excluded. Ranked by the chosen metric, a ranking and not a recommendation. A flag is a ' +
@@ -56,6 +56,7 @@ const FLAG_LEGEND: Record<string, string> = {
   fallback_data: 'Scored on fallback data: lower confidence in the score.',
   partial_data: 'Some score inputs were missing: lower confidence in the score.',
   stale_score: 'Scored more than 8 hours ago (scoring runs every 4 hours).',
+  no_yield: '7-day median APY is 0.1% or less, so this is not a yield product (usually a collateral reserve). The score rates holding it safely; no Atlas portfolio includes it.',
 };
 
 const PRESENTATION = [
