@@ -45,7 +45,7 @@ describe('compare_vaults', () => {
       ['0xaaa', true], ['0xccc', true], ['0xbbb', true], ['0xdead', false],
     ]);
     const ranking = res.structuredContent!['ranking'] as Array<{ rank: number; name: string | null }>;
-    expect(ranking.map((r) => r.name)).toEqual(['C', 'B', 'A']);
+    expect(ranking.map((r) => r.name)).toEqual(['C', 'A', 'B']);
     expect(ranking[0]?.rank).toBe(1);
   });
 
@@ -54,7 +54,15 @@ describe('compare_vaults', () => {
       vaults: [{ chainId: 8453, address: '0xaaa' }, { chainId: 8453, address: '0xbbb' }],
     });
     const ranking = res.structuredContent!['ranking'] as Array<{ name: string | null; notYieldProduct: boolean | null }>;
-    expect(ranking.map((r) => [r.name, r.notYieldProduct])).toEqual([['B', true], ['A', null]]);
+    expect(ranking.map((r) => [r.name, r.notYieldProduct])).toEqual([['A', null], ['B', true]]);
+  });
+
+  it('ranks a not-yield-product vault after unflagged ones even with a higher composite', async () => {
+    const res = await compareVaults(clientWith(), {
+      vaults: [{ chainId: 8453, address: '0xaaa' }, { chainId: 8453, address: '0xbbb' }],
+    });
+    const ranking = res.structuredContent!['ranking'] as Array<{ rank: number; name: string | null }>;
+    expect(ranking.map((r) => [r.rank, r.name])).toEqual([[1, 'A'], [2, 'B']]);
   });
 
   it('surfaces an upstream failure as isError', async () => {
