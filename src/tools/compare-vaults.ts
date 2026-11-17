@@ -13,7 +13,7 @@ export const compareVaultsInput = {
 
 export const compareVaultsDescription =
   'Side-by-side Atlas Scores for 2-8 vaults: composite, label, four pillars, live APY/TVL, ' +
-  'data quality, yieldQuality and exitSafety, with a ranking by composite. Unscored vaults ' +
+  'data quality, yieldQuality and exitSafety, with a ranking by composite (each entry also says notYieldProduct: true when the vault earns about nothing). Unscored vaults ' +
   'come back found:false rather than silently dropped. Read-only.';
 
 export async function compareVaults(
@@ -39,7 +39,7 @@ export async function compareVaults(
     const ranking = vaults
       .flatMap((v) => (v.vault ? [v.vault] : []))
       .sort((a, b) => b.composite - a.composite)
-      .map((r, i) => ({ rank: i + 1, vaultId: r.vaultId, name: r.name, composite: r.composite }));
+      .map((r, i) => ({ rank: i + 1, vaultId: r.vaultId, name: r.name, composite: r.composite, notYieldProduct: r.notYieldProduct ?? false }));
 
     return ok({ vaults, ranking, scorerVersion });
   } catch (err) {

@@ -10,7 +10,7 @@ const base: Omit<ScoreRow, 'vaultId' | 'chainId' | 'composite' | 'name'> = {
   yieldQuality: null, yieldQualityReason: null, exitSafety: null, exitSafetyReason: null,
 };
 const BASE_A: ScoreRow = { ...base, vaultId: 'morpho:8453:0xaaa', chainId: 8453, composite: 65, name: 'A' };
-const BASE_B: ScoreRow = { ...base, vaultId: 'morpho:8453:0xbbb', chainId: 8453, composite: 72, name: 'B' };
+const BASE_B: ScoreRow = { ...base, vaultId: 'morpho:8453:0xbbb', chainId: 8453, composite: 72, name: 'B', notYieldProduct: true };
 const ETH_C:  ScoreRow = { ...base, vaultId: 'aave-v3:1:0xccc', chainId: 1, composite: 80, name: 'C' };
 
 function clientWith(seen: string[] = []) {
@@ -47,6 +47,14 @@ describe('compare_vaults', () => {
     const ranking = res.structuredContent!['ranking'] as Array<{ rank: number; name: string | null }>;
     expect(ranking.map((r) => r.name)).toEqual(['C', 'B', 'A']);
     expect(ranking[0]?.rank).toBe(1);
+  });
+
+  it('carries notYieldProduct into the ranking, false when the API omits it', async () => {
+    const res = await compareVaults(clientWith(), {
+      vaults: [{ chainId: 8453, address: '0xaaa' }, { chainId: 8453, address: '0xbbb' }],
+    });
+    const ranking = res.structuredContent!['ranking'] as Array<{ name: string | null; notYieldProduct: boolean }>;
+    expect(ranking.map((r) => [r.name, r.notYieldProduct])).toEqual([['B', true], ['A', false]]);
   });
 
   it('surfaces an upstream failure as isError', async () => {
