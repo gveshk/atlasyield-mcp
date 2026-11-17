@@ -49,12 +49,12 @@ describe('compare_vaults', () => {
     expect(ranking[0]?.rank).toBe(1);
   });
 
-  it('carries notYieldProduct into the ranking, false when the API omits it', async () => {
+  it('carries notYieldProduct into the ranking, null when the API omits it', async () => {
     const res = await compareVaults(clientWith(), {
       vaults: [{ chainId: 8453, address: '0xaaa' }, { chainId: 8453, address: '0xbbb' }],
     });
-    const ranking = res.structuredContent!['ranking'] as Array<{ name: string | null; notYieldProduct: boolean }>;
-    expect(ranking.map((r) => [r.name, r.notYieldProduct])).toEqual([['B', true], ['A', false]]);
+    const ranking = res.structuredContent!['ranking'] as Array<{ name: string | null; notYieldProduct: boolean | null }>;
+    expect(ranking.map((r) => [r.name, r.notYieldProduct])).toEqual([['B', true], ['A', null]]);
   });
 
   it('surfaces an upstream failure as isError', async () => {
