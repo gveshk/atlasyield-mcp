@@ -12,6 +12,7 @@ export const getVaultScoreDescription =
   '(yield, safety, liquidity, sustainability), live APY/TVL, data quality and the scoring ' +
   'timestamp. Each vault also carries holdingsScore: the score from what it holds, with its cap; ' +
   'published:false means it is not yet the headline composite. ' +
+  'notYieldProduct: true means it earns essentially nothing; do not present the score as a reason to deposit for yield. ' +
   'Returns found:false when the vault is not in the scored universe. Read-only.';
 
 export async function getVaultScore(
